@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <script src="../node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="../node_modules/mustache/mustache.min.js"></script>
+    <script src="template.js"></script>
+
+</head>
+
+<body onload="loadUser()">
+    <div id="target">
+        Loading...
+    </div>
+
+    <script id="template" type="x-tmpl-mustache">
+        Hello {{name}} !
+    </script>
+
+    <div id="test">
+        <script id="test-tmpl" type="x-tmpl-mustache">
+            <p>* {{name}}</p>
+            <p>* {{age}}</p>
+            <p>* {{company}}</p>
+            <p>* {{{company}}}</p>
+            <p>* {{&company}}</p>
+            <p>
+                {{=<% %>=}}
+                * {{company}}
+                <%={{ }}=%>
+            </p>
+        </script>
+    </div>
+
+    <div id="test1">
+        <script id="test1-tmpl" type="x-tmpl-mustache">
+            <p>* {{name.first}} {{name.last}} </p>
+            <p>* {{age}}</p>
+        </script>
+    </div>
+
+    <div id="test-list">
+        <script id="test-list-tmpl" type="x-tmpl-mustache">
+            {{#beatles}}
+            <p>* {{name}}</p>
+            {{/beatles}}
+        </script>
+    </div>
+
+</body>
+
+</html>

@@ -1,0 +1,11 @@
+# ide相关
+.idea/
+
+# dist和packages
+dist/
+node_modules/
+
+
+
+
+

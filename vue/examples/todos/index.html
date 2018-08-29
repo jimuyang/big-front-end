@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html data-framework="vue">
+<head>
+    <meta charset="UTF-8">
+    <title>Vue.js TodoMVC</title>
+    <link rel="stylesheet" type="text/css" href="index.css">
+</head>
+
+<body>
+<section class="todoApp">
+    <header>
+        <h1>todos</h1>
+        <input autofocus
+               autoComplete="off"
+               placeholder="What need to be done?"
+               class="new-todo"
+               v-model="newTodo"
+               @keyup.enter="addTodo">
+    </header>
+    <section class="main" v-show="todoList.length">
+        <input class="toggle-all" type="checkbox" v-model="allDone">
+
+        <ul class="todo-list">
+            <li class="todo-item" :class="{ completed: todo.completed }"
+                v-for="todo in filteredTodoList" :key="todo.id">
+                <div class="view">
+                    <input class="toggle" type="checkbox" v-model="todo.completed">
+                    <label>{{ todo.title }}</label>
+                    <button class="destroy" @click="removeTodo(todo)"></button>
+                </div>
+                <input class="edit" type="text">
+            </li>
+        </ul>
+    </section>
+    <footer class="footer" v-show="todoList.length">
+        <span class="todo-count">
+            <strong v-text="remaining"></strong> {{ pluralize('item', remaining) }} left
+        </span>
+        <ul class="filters">
+            <li><a href="#/all" :class="{selected: visibility == 'all'}">All</a></li>
+            <li><a href="#/active" :class="{selected: visibility == 'active'}">Active</a></li>
+            <li><a href="#/completed" :class="{selected: visibility == 'completed'}">Completed</a></li>
+        </ul>
+
+        <button class="clear-completed" @click="removeCompleted" v-show="todoList.length > remaining">
+            Clear completed
+        </button>
+    </footer>
+</section>
+
+<footer class="info">
+    <p>Double-click to edit a todo</p>
+    <p>Written by <a href="http://118.24.127.29">Jimu</a></p>
+    <p>Part of <a href="http://todomvc.com">TodoMVC</a></p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+
+<script>
+    var STORAGE_KEY = 'todos-vue';
+    var todoStorage = {
+        fetch: function () {
+            var todoList = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+            todoList.forEach(function (todo, index) {
+                todo.id = index;
+            });
+            todoStorage.uid = todoList.length;
+            return todoList;
+        },
+        save: function (todoList) {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(todoList));
+        }
+    };
+
+    var filters = {
+        all: function (todoList) {
+            return todoList;
+        },
+        completed: function (todoList) {
+            return todoList.filter(function (todo) {
+                return todo.completed;
+            })
+        },
+        active: function (todoList) {
+            return todoList.filter(function (todo) {
+                return !todo.completed;
+            })
+        }
+    };
+
+
+    var todoApp = new Vue({
+        data: function () {
+            return {
+                todoList: todoStorage.fetch(),
+                newTodo: '',
+                visibility: 'all'
+            }
+        },
+        watch: {
+            todoList: {
+                handler: function (todoList) {
+                    console.log('todoList has been changed');
+                    console.log(todoList);
+                    todoStorage.save(todoList);
+                },
+                deep: true
+            }
+        },
+        computed: {
+            filteredTodoList: function () {
+                return filters[this.visibility](this.todoList);
+            },
+            remaining: function () {
+                return filters.active(this.todoList).length;
+            },
+            activeTodoNum: function () {
+                return filters.active(this.todoList).length;
+            },
+            allDone: {
+                get: function () {
+                    return this.activeTodoNum === 0;
+                },
+                set: function () {
+                    console.log('set all done');
+                    this.todoList.forEach(function (todo) {
+                        todo.completed = true;
+                    });
+                }
+            }
+        },
+        // filters: {
+        //     pluralize: function (word, count) {
+        //         return word + (count === 1 ? '' : 's');
+        //     }
+        // },
+        methods: {
+            test: function () {
+                console.log('test');
+            },
+            clear: function () {
+                this.todoList = [];
+            },
+            pluralize: function (word, count) {
+                return word + (count === 1 ? '' : 's');
+            },
+            addTodo: function () {
+                var value = this.newTodo && this.newTodo.trim();
+                if (!value) {
+                    return;
+                }
+
+                this.todoList.push({
+                    id: todoStorage.uid++,
+                    title: value,
+                    completed: false
+                });
+
+                this.newTodo = '';
+            },
+            removeTodo: function (todo) {
+                this.todoList.splice(this.todoList.indexOf(todo), 1);
+            },
+            editTodo: function (todo) {
+
+            },
+            removeCompleted: function () {
+                this.todoList = filters.active(this.todoList);
+            }
+        },
+        directives: {
+            'todo-focus': function (el, binding) {
+                if (binding.value) {
+                    el.focus();
+                }
+            }
+        }
+    });
+
+
+    // handle routing
+    function onHashChange() {
+        var visibility = window.location.hash.replace(/#\/?/, '');
+        if (filters[visibility]) {
+            todoApp.visibility = visibility;
+        } else {
+            window.location.hash = '';
+            todoApp.visibility = 'all';
+        }
+    }
+
+    window.addEventListener('hashchange', onHashChange);
+    onHashChange();
+
+    todoApp.$mount('.todoApp');
+
+</script>
+
+
+</body>
+
+
+</html>
