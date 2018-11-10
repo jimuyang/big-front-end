@@ -2,6 +2,33 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 
+/**
+ * check if someone win.
+ * @param {Array} squares
+ */
+function checkWinner(squares) {
+    const lines = [
+        [0, 1, 2],
+        [3, 4, 5],
+        [6, 7, 8],
+        [0, 3, 6],
+        [1, 4, 7],
+        [2, 5, 8],
+        [0, 4, 8],
+        [2, 4, 6],
+    ];
+    for (let i = 0; i < lines.length; i++) {
+        // let line = lines[i];
+        const [a, b, c] = lines[i];
+        if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
+            // someone win!
+            console.log(squares[a] + ' win!');
+            return squares[a];
+        }
+    }
+    return null;
+}
+
 function Square(props) {
     return (
         <button className="square" onClick={props.onClick}>
@@ -15,25 +42,42 @@ class Board extends React.Component {
         super(props);
         this.state = {
             squares: Array(9).fill(null),
+            currentPlayer: 'X',
+            winner: null
         }
 
     }
     handleClick(i) {
         // create array copy
         const squares = this.state.squares.slice();
-        squares[i] = 'X';
-        this.setState({squares: squares})
+        if (squares[i] || this.state.winner) {
+            return null;
+        }
+        squares[i] = this.state.currentPlayer;
+        this.setState({
+            squares: squares,
+            currentPlayer: this.state.currentPlayer === 'X' ? 'O' : 'X',
+            winner: checkWinner(squares)
+        });
     }
-    
+
 
     renderSquare(i) {
-        return <Square value={this.state.squares[i]} 
-                       onClick={() => this.handleClick(i)} />;
+        return <Square value={this.state.squares[i]}
+            onClick={() => this.handleClick(i)} />;
     }
 
     render() {
-        const status = 'Next player: X';
-
+        // rerender: this.state has changed.
+        // now check if win
+        // const winner = checkWinner(this.state.squares);
+        let status;
+        if (this.state.winner) {
+            status = 'Winner: ' + this.state.winner;
+        } else {
+            status = 'Next player: ' + this.state.currentPlayer;
+        }
+        // const status = 'Next player: ' + this.state.currentPlayer;
         return (
             <div>
                 <div className="status">{status}</div>
