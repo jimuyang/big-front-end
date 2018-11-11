@@ -2,6 +2,8 @@ import GGEditor, { Flow } from 'gg-editor';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
+import FlowPage from './pages/Flow';
+
 const data = {
     nodes: [{
       type: 'node',
@@ -34,6 +36,7 @@ const data = {
     }],
   };
 
+   // eslint-disable-next-line
 function Main(props) {
     return (
         <GGEditor>
@@ -44,6 +47,6 @@ function Main(props) {
 
 // ========================================
 ReactDOM.render(
-    <Main />,
+    <FlowPage />,
     document.getElementById('root')
 );

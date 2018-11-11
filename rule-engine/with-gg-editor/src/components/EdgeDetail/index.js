@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card, Form, Input, Select } from 'antd';
 import { withPropsAPI } from 'gg-editor';
-import _default from 'antd/lib/version';
+// import _default from 'antd/lib/version';
 
 const { Item } = Form;
 const { Option } = Select;
