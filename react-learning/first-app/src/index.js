@@ -1,6 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
+import styles from './index.module.scss';
+
+console.log(styles);
 
 /**
  * check if someone win.

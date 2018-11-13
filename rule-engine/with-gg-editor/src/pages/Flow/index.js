@@ -8,7 +8,7 @@ import { FlowDetailPanel } from '../../components/EditorDetailPanel';
 import { FlowContextMenu } from '../../components/EditorContextMenu';
 import { FlowToolbar } from '../../components/EditorToolbar';
 
-import styles from './index.scss';
+import styles from './index.module.scss';
 
 class FlowPage extends React.Component {
     renderFlow() {
@@ -18,6 +18,7 @@ class FlowPage extends React.Component {
     }
 
     render() {
+        console.log(styles);
         return (
             <GGEditor className={styles.editor}>
                 <Row type="flex" className={styles.editorHd}>
