@@ -46,6 +46,7 @@ class NodeDetail extends React.Component {
 
         const item = getSelected()[0];
 
+        debugger;
         if (!item) {
             return null;
         }

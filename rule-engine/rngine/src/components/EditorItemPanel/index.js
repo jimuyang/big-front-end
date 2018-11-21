@@ -15,7 +15,8 @@ class EditorItemPanel extends React.Component {
                         shape="flow-circle"
                         model={{
                             color: '#fa8c16',
-                            label: '起止节点'
+                            label: '起止节点',
+                            test: 'test',
                         }} src="https://gw.alipayobjects.com/zos/rmsportal/ZnPxbVjKYADMYxkTQXRi.svg"
                     />
                     <Item

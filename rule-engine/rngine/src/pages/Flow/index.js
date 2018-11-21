@@ -18,7 +18,6 @@ class FlowPage extends React.Component {
     }
 
     render() {
-        console.log(styles);
         return (
             <GGEditor className={styles.editor}>
                 <Row type="flex" className={styles['editor-hd']}>

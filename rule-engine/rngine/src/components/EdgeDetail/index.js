@@ -65,6 +65,7 @@ class EdgeDetail extends React.Component {
             return;
         }
 
+        debugger;
         const { label = '', shape = 'flow-smooth' } = item.getModel();
 
         return (
