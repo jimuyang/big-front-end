@@ -1,5 +1,19 @@
-function main() {
+(function main() {
     'use strict';
+
+
+    //*******************************************************************************************************/
+    /**
+     * @const
+     */
+    let DEFAULT_WIDTH = 600;
+    let FPS = 60;
+
+    let IS_HIDPI = window.devicePixelRatio > 1;
+    let IS_IOS = /iPad|iPhone|iPod/.test(window.navigator.platform);
+    let IS_MOBILE = IS_IOS || /Android/.test(window.navigator.userAgent);
+
+    let IS_TOUCH_ENABLED = 'ontouchstart' in window;
 
 
     //*******************************************************************************************************/
@@ -7,7 +21,7 @@ function main() {
         // singleton
         if (Runner._instance) {
             return Runner._instance;
-        }   
+        }
         Runner._instance = this;
 
         this.outerContainerEl = document.querySelector(outerContainer);
@@ -17,11 +31,12 @@ function main() {
 
         this.loadResources();
 
-
+        new HorizonLine(this.canvas, this.spriteDef.HORIZON);
     }
+    window['Runner'] = Runner;
 
     /**
-     * 
+     * 默认维度
      */
     Runner.DEFAULT_DIMENSIONS = {
         WIDTH: DEFAULT_WIDTH,
@@ -96,15 +111,16 @@ function main() {
             }
         },
         SOUNDS: {
-            TEMPLATE_ID = 'audio-resources',
-            BUTTON_PRESS = 'offline-sound-press',
+            TEMPLATE_ID: 'audio-resources',
+            BUTTON_PRESS: 'offline-sound-press',
             HIT: 'offline-sound-hit',
             SCORE: 'offline-sound-reached'
         },
     }
 
     Runner.CLASSES = {
-        CANVAS: 'runner-canvas',
+        RESOURCES: '#resources',
+        CANVAS: '',
         CONTAINER: 'runner-container',
         CRASHED: 'crashed',
         ICON: 'icon-offline',
@@ -145,9 +161,9 @@ function main() {
         /**
          * game init
          */
-        init: function() {
-            // Hide the static icon
-            document.querySelector('.' + Runner.CLASSES.ICON).style.visibility = 'hidden';
+        init: function () {
+            // Hide the resource 
+            document.querySelector(Runner.CLASSES.RESOURCES).style.visibility = 'hidden';
 
             this.dimensions = Runner.DEFAULT_DIMENSIONS;
 
@@ -156,9 +172,9 @@ function main() {
             this.containerEl.className = Runner.CLASSES.CONTAINER;
 
             // create canvas
-            this.canvas = createCanvas(containerEl, this.dimensions.WIDTH, this.dimensions.HEIGHT);
+            this.canvas = createCanvas(this.containerEl, this.dimensions.WIDTH, this.dimensions.HEIGHT);
             this.canvasContext = this.canvas.getContext('2d');
-            this.canvasContext.fillStyle = '#f7f7f7';
+            this.canvasContext.fillStyle = 'red';
             this.canvasContext.fill();
 
             this.outerContainerEl.appendChild(this.containerEl);
@@ -187,18 +203,6 @@ function main() {
 
 
 
-    //*******************************************************************************************************/
-    /**
-     * @const
-     */
-    let DEFAULT_WIDTH = 600;
-    let FPS = 60;
-
-    let IS_HIDPI = widow.devicePixelRatio > 1;
-    let IS_IOS = /iPad|iPhone|iPod/.test(window.navigator.platform);
-    let IS_MOBILE = IS_IOS || /Android/.test(window.navigator.userAgent);
-
-    let IS_TOUCH_ENABLED = 'ontouchstart' in window;
 
 
 
@@ -213,23 +217,24 @@ function main() {
     /***
      * 地平线
      */
-    function HorizonLine(canvas, spritePos) {
-        this.spritePos = spritePos;
+    function HorizonLine(canvas, spriteDef) {
+        this.spriteDef = spriteDef;
         this.canvas = canvas;
         this.canvasContext = canvas.getContext('2d');
 
         this.sourceDimensions = {};
-        this.dimensions = HorizonLine.dimensions;
-
+        this.dimensions = HorizonLine.DEFAULT_DIMENSIONS;
+        this.setSourceDimensions();
+        this.draw();
     }
 
     /**
      * 地平线的维度
      */
-    HorizonLine.dimensions = {
+    HorizonLine.DEFAULT_DIMENSIONS = {
         WIDTH: 600,
         HEIGHT: 12,
-        YPOS: 127
+        YPOS: 127 // canvas坐标
     }
 
     /**
@@ -237,43 +242,66 @@ function main() {
      */
     HorizonLine.prototype = {
         /**
-         * set source dimensions
+         * set source dimensions 设置源图的宽高
          */
         setSourceDimensions: function () {
-            for (let dimension in HorizonLine.dimensions) {
-                // 高DPI下宽高需要调整为2倍
+            for (let dimension in HorizonLine.DEFAULT_DIMENSIONS) {
+                // 高DPI下源图的宽高为2倍
                 if (IS_HIDPI) {
                     if (dimension != 'YPOS') {
                         this.sourceDimensions[dimension]
-                            = HorizonLine.dimensions[dimension] * 2;
+                            = HorizonLine.DEFAULT_DIMENSIONS[dimension] * 2;
                     }
                 } else {
                     this.sourceDimensions[dimension]
-                        = HorizonLine.dimensions[dimension];
+                        = HorizonLine.DEFAULT_DIMENSIONS[dimension];
                 }
-                this.dimensions[dimension] = HorizonLine.dimensions[dimension];
+                // copy to this.dimensions
+                // this.dimensions[dimension] = HorizonLine.DEFAULT_DIMENSIONS[dimension];
             }
-            this.xPos = [0, HorizonLine.dimensions.WIDTH];
-            this.yPos = HorizonLine.dimensions.YPOS;
+            // 个人觉得放在这里解释不通
+            // this.xPos = [0, this.dimensions.WIDTH];
+            // this.yPos = this.dimensions.YPOS;
         },
 
         /**
-         * 画出地平线
+         * 画出地平线 
+         * 
+         * 实现循环: line1和line2不停向左，当line1完全退出canvas时，回到初始状态
+         * 
+         *          |----------------|
+         * |----------------|----------------
+         *   line1  |        line2   |
+         *          |----------------|
+         *              canvas
+         * 
+         * 初始状态：
+         *          |----------------|
+         *          |----------------|----------------
+         *          |       line1    |     line2
+         *          |----------------|
+         *              canvas 
          */
         draw: function () {
-            this.canvasContext.drawImage()
+            console.log('draw horizon line...');
+            // 使用 void ctx.drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight);
+            // 简单说明：image:图像源，s*:定义原图像的slice，d*:定义canvas中的绘制位置和大小 详见：https://developer.mozilla.org/zh-CN/docs/Web/API/CanvasRenderingContext2D/drawImage
+
+            this.canvasContext.drawImage(Runner.spriteImage, 
+                this.spriteDef.x, this.spriteDef.y,
+                this.sourceDimensions.WIDTH, this.sourceDimensions.HEIGHT,
+                0, 0,
+                this.dimensions.WIDTH, this.dimensions.HEIGHT);
+            // this.canvasContext.drawImage(Runner.spriteImage, 0, 0);
+            
         }
 
     }
 
-
-
-
-
-
-}
+})();
 
 function onDocumentLoaded() {
     console.log('Document Loaded');
+    new Runner('#main-content');
 }
 document.addEventListener('DOMContentLoaded', onDocumentLoaded);

@@ -1,5 +1,6 @@
 # ide相关
 .idea/
+.vscode/
 
 # dist和packages
 dist/
