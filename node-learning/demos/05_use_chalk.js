@@ -1,5 +1,4 @@
-
 const chalk = require('chalk');
 
-console.log(chalk);
-// console.log(chalk.pink('this is red'));
+// console.log(chalk);
+console.log(chalk.red('this is red'));
