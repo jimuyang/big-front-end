@@ -1,0 +1,24 @@
+{
+  "name": "anydoor",
+  "version": "1.0.0",
+  "description": "ang ang ang",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint .",
+    "fix": "eslint --fix ."
+  },
+  "author": "Jimu Yang",
+  "license": "ISC",
+  "pre-commit": [
+    "lint",
+    "fix"
+  ],
+  "keywords": [
+    "static",
+    "webserver"
+  ],
+  "devDependencies": {
+    "pre-commit": "^1.2.2"
+  }
+}
