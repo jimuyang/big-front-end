@@ -19,6 +19,7 @@
     "webserver"
   ],
   "devDependencies": {
+    "chalk": "^2.4.2",
     "pre-commit": "^1.2.2"
   }
 }
