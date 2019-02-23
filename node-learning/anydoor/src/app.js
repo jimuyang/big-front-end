@@ -16,21 +16,23 @@ const server = http.createServer((req, resp) => {
             resp.end(`cannot find directory or file: ${filePath}`);
             return;
         }
-        
-        if(fileStats.isFile()) {
+
+        if (fileStats.isFile()) {
             resp.statusCode = 200;
             resp.setHeader('Content-type', 'text/plain');
-            
+            fs.createReadStream(filePath).pipe(resp);
+        } else if (fileStats.isDirectory()) {
+            fs.readdir(filePath, (err, files) => {
+                resp.statusCode = 200;
+                resp.setHeader('Content-Type', 'text/plain');
+                resp.end(files.join('\n'));
+            });
         }
-
-
     });
-
-
-    resp.statusCode = 200;
-    resp.setHeader('Content-type', 'text/plain');
+    // resp.statusCode = 200;
+    // resp.setHeader('Content-type', 'text/plain');
     // resp.end('Hello Node\n');
-    resp.end(filePath);
+    // resp.end(filePath);
 });
 
 server.listen(conf.port, conf.hostname, () => {
