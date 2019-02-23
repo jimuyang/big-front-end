@@ -16,7 +16,6 @@ const server = http.createServer((req, resp) => {
             resp.end(`cannot find directory or file: ${filePath}`);
             return;
         }
-
         if (fileStats.isFile()) {
             resp.statusCode = 200;
             resp.setHeader('Content-type', 'text/plain');

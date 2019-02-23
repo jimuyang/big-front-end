@@ -4,6 +4,7 @@
   "description": "ang ang ang",
   "main": "app.js",
   "scripts": {
+    "mdev": "node --experimental-modules src/app_promise.mjs",
     "dev": "supervisor src/app.js",
     "lint": "eslint .",
     "fix": "eslint --fix ."
