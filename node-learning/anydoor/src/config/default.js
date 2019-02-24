@@ -3,4 +3,4 @@ const conf = {
     hostname: 'localhost',
     port: 9888
 };
-module.export = conf;
+module.exports = conf;
