@@ -1,8 +1,11 @@
 {
   "name": "anydoor",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "ang ang ang",
-  "main": "app.js",
+  "main": "src/app.js",
+  "bin": {
+    "anydoor": "bin/anydoor"
+  },
   "scripts": {
     "mdev": "node --experimental-modules src/app_promise.mjs",
     "dev": "supervisor src/app.js",
@@ -24,6 +27,7 @@
     "pre-commit": "^1.2.2"
   },
   "dependencies": {
-    "handlebars": "^4.1.0"
+    "handlebars": "^4.1.0",
+    "yargs": "^13.2.1"
   }
 }
