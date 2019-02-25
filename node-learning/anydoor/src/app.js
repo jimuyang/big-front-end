@@ -6,6 +6,7 @@ const path = require('path');
 const fs = require('fs');
 const handlebars = require('handlebars');
 const compress = require('./helper/compress');
+const openurl = require('./helper/openurl');
 
 // dir.tpl
 const tplPath = path.join(__dirname, './templates/dir.tpl');
@@ -62,6 +63,7 @@ class Server {
             const addr = `http://${this.conf.hostname}:${this.conf.port}`;
             // eslint-disable-next-line no-console
             console.log(`server running at: ${chalk.green(addr)}`);
+            openurl(addr);
         });
     }
 }
