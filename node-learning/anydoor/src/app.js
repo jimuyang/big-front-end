@@ -1,5 +1,6 @@
 const http = require('http');
 const conf = require('./config/default');
+const mime = require('./helper/mime');
 const chalk = require('chalk');
 const path = require('path');
 const fs = require('fs');
@@ -21,7 +22,7 @@ const server = http.createServer((req, resp) => {
         }
         if (fileStats.isFile()) {
             resp.statusCode = 200;
-            resp.setHeader('Content-type', 'text/plain');
+            resp.setHeader('Content-type', mime(filePath));
             fs.createReadStream(filePath).pipe(resp);
         } else if (fileStats.isDirectory()) {
             fs.readdir(filePath, (err, files) => {
