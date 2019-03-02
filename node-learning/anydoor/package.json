@@ -1,6 +1,6 @@
 {
-  "name": "anydoor",
-  "version": "0.1.0",
+  "name": "jimu_anydoor",
+  "version": "0.1.1",
   "description": "ang ang ang",
   "main": "src/app.js",
   "bin": {
