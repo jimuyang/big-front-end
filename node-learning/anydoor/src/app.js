@@ -32,7 +32,7 @@ class Server {
                     resp.statusCode = 200;
                     resp.setHeader('Content-type', mime(filePath));
                     // 压缩conf.compress定义的文件类型
-                    let rs = fs.createReadStream(filePath);
+                    let rs = fs.createReadStream(filePath, 'utf-8');
                     if (filePath.match(this.conf.compress)) {
                         console.log(filePath);
                         rs = compress(rs, req, resp);
