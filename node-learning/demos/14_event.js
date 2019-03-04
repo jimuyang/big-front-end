@@ -18,3 +18,20 @@ myEmitter.on('event', () => {
 
 myEmitter.emit('event');
 
+var event = new EventEmitter();
+
+var count = 0;
+var num = 10;
+
+event.on('some_event', function () {
+    count++;
+    console.log('some_event 事件触发' + count);
+    if (count < num) {
+        event.emit('some_event')
+    }
+});
+
+event.emit('some_event');
+
+console.log('what ?')
+
