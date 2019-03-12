@@ -2,17 +2,17 @@
 const path = require('path');
 
 const mimeType = {
-    'css': 'text/css',
+    'css': 'text/css;charset=utf-8',
     'gif': 'image/gif',
-    'html': 'text/html',
+    'html': 'text/html;charset=utf-8',
     'ico': 'image/x-icon',
     'jpg': 'image/jpeg',
     'jpeg': 'image/jpeg',
-    'js': 'text/javascript',
-    'json': 'application/json',
+    'js': 'text/javascript;charset=utf-8',
+    'json': 'application/json;charset=utf-8',
     'png': 'image/png',
-    'txt': 'text/plain',
-    'xml': 'text/xml'
+    'txt': 'text/plain;charset=utf-8',
+    'xml': 'text/xml;charset=utf-8'
 };
 module.exports = filePath => {
     let ext = path.extname(filePath).split('.').pop().toLowerCase() || filePath;

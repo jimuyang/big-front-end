@@ -8,7 +8,7 @@
   },
   "scripts": {
     "mdev": "node --experimental-modules src/app_promise.mjs",
-    "dev": "supervisor src/app.js",
+    "dev": "supervisor index.js",
     "lint": "eslint .",
     "fix": "eslint --fix ."
   },

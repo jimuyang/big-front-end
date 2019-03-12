@@ -59,8 +59,8 @@ class Server {
             // resp.end(filePath);
         });
 
-        server.listen(this.conf.port, this.conf.hostname, () => {
-            const addr = `http://${this.conf.hostname}:${this.conf.port}`;
+        server.listen(this.conf.port, this.conf.host, () => {
+            const addr = `http://${this.conf.host}:${this.conf.port}`;
             // eslint-disable-next-line no-console
             console.log(`server running at: ${chalk.green(addr)}`);
             openurl(addr);
