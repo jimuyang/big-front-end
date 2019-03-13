@@ -1,0 +1,4 @@
+# 实际这个ignore无效
+build/
+node_modules/
+.vscode/
