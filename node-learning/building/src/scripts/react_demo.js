@@ -11,7 +11,9 @@ class HelloMessage extends React.Component {
     }
 }
 
-ReactDOM.render(
-    <HelloMessage name="Taylor" />,
-    mountNode
-);
+export default () => {
+    ReactDOM.render(
+        <HelloMessage name="Taylor" />,
+        document.querySelector('#container')
+    );
+}
