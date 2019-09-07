@@ -10,4 +10,5 @@ build/
 # log
 *.log
 
+ts-axios-doc/
 
